@@ -10,12 +10,21 @@ const fetchData = async (searchTerm) => {
 
 const input = document.querySelector("input");
 
-let timeoutId;
+
+/*
+  generic fucntion to delay request
+*/
+const debounceHelper = (callback, delay = 1000) => {
+	let timeoutId;
+	return (...args) => {
+		if (timeoutId) clearTimeout(timeoutId);
+		timeoutId = setTimeout(() => {
+			callback.apply(null, args);
+		}, delay);
+	};
+};
 const onInput = (event) => {
-	if (timeoutId) clearTimeout(timeoutId);
-	timeoutId = setTimeout(() => {
-		fetchData(event.target.value);
-	}, 1000);
+	fetchData(event.target.value);
 };
 
-input.addEventListener("input", onInput);
+input.addEventListener("input", debounceHelper(onInput, 1000));
