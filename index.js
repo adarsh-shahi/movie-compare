@@ -58,7 +58,22 @@ const onMovieSelect = async (movie, summaryElement, side) => {
 };
 
 const runComparison = () => {
-	
+	const leftSidestats = document.querySelectorAll('.left-summary .notification')
+	const rightSidestats = document.querySelectorAll('.right-summary .notification')
+	leftSidestats.forEach((leftStat, ind) => {
+		const rightStat = rightSidestats[ind]
+
+		const leftSideValue = parseInt(leftStat.dataset.value)
+		const rightSideValue = parseInt(rightStat.dataset.value)
+		if(rightSideValue > leftSideValue){
+			leftStat.classList.remove('is-primary')
+			leftStat.classList.add('is-warning')
+		}
+		else {
+			rightStat.classList.remove('is-primary')
+			rightStat.classList.add('is-warning')
+		}
+	})
 };
 
 const movieTemplate = (movieDetail) => {
@@ -73,7 +88,6 @@ const movieTemplate = (movieDetail) => {
 		if (!isNaN(value)) return agg + value;
 		return agg;
 	}, 0);
-	console.log(awards);
 	return `
 		<article class="media">
 			<figure class="media-left">
