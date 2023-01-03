@@ -26,16 +26,32 @@ const resultsWrapper = document.querySelector(".results");
 
 const onInput = async (event) => {
 	const movies = await fetchData(event.target.value);
-  dropdown.classList.add('is-active')
+
+	if (!movies.length) {
+		dropdown.classList.remove("is-active");
+		return;
+	}
+	resultsWrapper.innerHTML = ``;
+	dropdown.classList.add("is-active");
 	movies.map((movie) => {
 		const option = document.createElement("a");
-
-    option.classList.add('dropdown-item')
+		const imgSrc = movie.Poster === "N/A" ? "" : movie.Poster;
+		option.classList.add("dropdown-item");
 		option.innerHTML = `
-      <img src="${movie.Poster}" />
+      <img src="${imgSrc}" />
       ${movie.Title}
     `;
+		option.addEventListener("click", () => {
+			dropdown.classList.remove("is-active");
+			input.value = movie.Title
+		});
 		resultsWrapper.appendChild(option);
 	});
 };
 input.addEventListener("input", debounceHelper(onInput, 1000));
+
+document.addEventListener("click", (event) => {
+	if (!root.contains(event.target)) {
+		dropdown.classList.remove("is-active");
+	}
+});
